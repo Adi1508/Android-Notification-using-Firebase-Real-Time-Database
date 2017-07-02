@@ -44,95 +44,6 @@ import java.util.List;
 
 public class NotifierService extends Service {
 
-    //First Way
-
-   /* private Looper mServiceLooper;
-    private ServiceHandler mServiceHandler;
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-
-        HandlerThread thread=new HandlerThread("NotifierService", Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-
-        mServiceLooper = thread.getLooper();
-        // start the service using the background handler
-        mServiceHandler = new ServiceHandler(mServiceLooper);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "onStartCommand", Toast.LENGTH_SHORT).show();
-
-        // call a new service handler. The service ID can be used to identify the service
-        Message message = mServiceHandler.obtainMessage();
-        message.arg1 = startId;
-        mServiceHandler.sendMessage(message);
-
-        return START_STICKY;
-    }
-
-    // Object responsible for
-    private final class ServiceHandler extends Handler {
-
-        public ServiceHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            DatabaseReference ref= FirebaseDatabase.getInstance().getReference("posts");
-
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String value= String.valueOf(dataSnapshot.getValue());
-                    System.out.println(value);
-
-                    createNotif(value);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
-    }
-
-    private void createNotif(String value) {
-
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(this)
-                 .setSmallIcon(R.drawable.ic_launcher_round)
-                 .setContentTitle("Notification Example")
-                 .setSound(defaultSoundUri)
-                 .setContentText(value);
-
-        Intent notificationintent=new Intent(this,MainActivity.class);
-
-        PendingIntent contentIntent=PendingIntent.getActivity(this,0,notificationintent,PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
-
-        NotificationManager manager=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0,builder.build());
-    }*/
-
-    //Second Way
-
     SharedPreferences sharedPrefrences;
     public FirebaseDatabase mDatabase;
     Context context;
@@ -175,6 +86,8 @@ public class NotifierService extends Service {
 
     private void setupNotificationListener(){
 
+        //the query is used to fetch the last updated value from the database
+        
         //Query lastQuery = mDatabase.getReference().child("posts").orderByKey().limitToLast(1);
         Query query = mDatabase.getReference().child("posts").orderByChild("date").limitToLast(1);
         //Query lquery = mDatabase.getReference().child("posts").orderByKey();
